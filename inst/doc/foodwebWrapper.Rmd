@@ -1,0 +1,54 @@
+---
+title: "foodwebWrapper"
+author: Barry Zeeberg [aut, cre]
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{foodwebWrapper}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif;
+color:red'>Wrapper to Enhance the Functionality of the mvbutils::foodweb() Function<o:p></o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>Barry
+Zeeberg<o:p></o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>barryz2013@gmail.com<o:p></o:p></span></b></p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>One component of the return value of the mvbutils::foodweb() function is funmat. This component is described by the original authors as "a matrix of 0s and 1s showing what (row) calls what (column). The dimnames are the function names."</p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>I found this component to be very useful in helping me track my own development efforts, especially when my functions were distributed among several of my own under-development packages as well as established CRAN packages. But it was frustrating to me that the package associations of the tabulated functions were not shown.</p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>I was able to use another function find_funs() to determine that association, and then fold that into the funmat component of foodweb(). Finally, I was able to render the augmented table as html, in which the package names and functions were color-coded by package name, and the package names were hyperlinked to the corresponding CRAN pdf documentation.</p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>After running the program in the R Console (Figure 1), a typical example (Figure 2) was obtained
+
+![Figure 1. R Console example](console.jpg){width=100%}
+
+![Figure 2. foodwebWrapper example](html.jpg){width=150%}
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>The rows represent the calling function, and the columns represent the called function. The color coding of the header information allows the visual intuition of the package structure. The color coding of the calling function is inherited by the relevant matrix row cells, to facilitate tracing the inheritance down from the package of the calling function.</p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>The invoking call can itself contain the parameters <i>where</i> and <i>prune</i>. In that case the additional package or function names that are selected interactively are concatenated to those in the command line. It is a little easier to specify these interactively, as that procedure will prevent specifying useless parameter values. The final set of these parameter values are archived in an output file that has the same name as the .html file with .txt appended.</p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>The behavior of the <i>prune</i> should be mentioned. The parameter values are the names of functions, and when given, the output is <i>restricted</i> to those branches that include the given pruning functions. However, when multiple pruning functions are given, then the output is <i>enlarged</i> to the union of the pruning branches. This is not my design, it is the pre-existing behavior of the underlying foodweb() function.</p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>Finally, as a diversion from the monotony of the little rectangles, we can specify random chess pieces by <i>pawns=TRUE</i></p><br>

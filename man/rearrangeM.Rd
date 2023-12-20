@@ -19,13 +19,10 @@ returns rearranged version of m
 rearrange the order of rows or columns of matrix based on entries in a vector
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-m<-concatPackFunc2(x_examples$funmat,v)
-v2<-consolidate(v)
-
-m2<-rearrangeM(m,v2)
+if(interactive()){
+load("data/x_m.RData")
+load("data/x_v2.RData")
+m2<-rearrangeM(x_m,x_v2)
+}
 
 }

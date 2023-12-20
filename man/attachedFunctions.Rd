@@ -14,7 +14,6 @@ returns a list whose components are
 \itemize{
 \item l list of user-selected packages and corresponding functions
 \item where character vector of selected packages
-\item prune character vector of selected functions
 }
 }
 \description{
@@ -22,6 +21,8 @@ print a list of attached packages and
 their functions for the user to select from
 }
 \examples{
-if(interactive()){attachedFunctions(verbose=TRUE)}
+if(interactive()){
+attachedFunctions(verbose=TRUE)
+}
 
 }

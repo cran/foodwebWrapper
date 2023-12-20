@@ -45,10 +45,7 @@ font-family:"Times New Roman",serif'>After running the program in the R Console 
 font-family:"Times New Roman",serif'>The rows represent the calling function, and the columns represent the called function. The color coding of the header information allows the visual intuition of the package structure. The color coding of the calling function is inherited by the relevant matrix row cells, to facilitate tracing the inheritance down from the package of the calling function.</p><br>
 
 <p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
-font-family:"Times New Roman",serif'>The invoking call can itself contain the parameters <i>where</i> and <i>prune</i>. In that case the additional package or function names that are selected interactively are concatenated to those in the command line. It is a little easier to specify these interactively, as that procedure will prevent specifying useless parameter values. The final set of these parameter values are archived in an output file that has the same name as the .html file with .txt appended.</p><br>
-
-<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
-font-family:"Times New Roman",serif'>The behavior of the <i>prune</i> should be mentioned. The parameter values are the names of functions, and when given, the output is <i>restricted</i> to those branches that include the given pruning functions. However, when multiple pruning functions are given, then the output is <i>enlarged</i> to the union of the pruning branches. This is not my design, it is the pre-existing behavior of the underlying foodweb() function.</p><br>
+font-family:"Times New Roman",serif'>Figure 1 demonstrates using the interactive mode of foodwebWrapper(). This mode has the advantage of displaying the valid inputs to the user. Batch mode is also available, in which the package names are input *via* the command line parameter where=c("pack1","pack2", . . . "packN"). Batch mode is more convenient if you already have in hand a valid list of the desired packages.</p><br>
 
 <p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
 font-family:"Times New Roman",serif'>Finally, as a diversion from the monotony of the little rectangles, we can specify random chess pieces by <i>pawns=TRUE</i></p><br>

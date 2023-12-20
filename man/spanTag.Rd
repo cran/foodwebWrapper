@@ -29,20 +29,10 @@ Also insert hyperlink to CRAN package and function documentation.
 see https://www.pierobon.org/html/span.htm#:~:text=Cells\%20within\%20HTML\%20tables\%20can,span\%20more\%20than\%20one\%20column.
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-m<-concatPackFunc2(x_examples$funmat,v)
-v2<-consolidate(v)
-m2<-rearrangeM(m,v2)
-
-m3<-removeZeroRowsCols(m2)
-
-colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-
-l<-spanTag(m3[1,c(-1,-2)],"COLSPAN",colorMap)
-
+if(interactive()){
+load("data/x_m5.RData")
+load("data/x_colorMap.RData")
+l<-spanTag(x_m5[1,c(-1,-2)],"COLSPAN",x_colorMap)
+}
 
 }

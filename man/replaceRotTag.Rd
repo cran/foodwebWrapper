@@ -20,26 +20,11 @@ returns modified version of HTML code containing data table
 insert html tags for rotating text
 }
 \examples{
-if(interactive()) {
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-v2<-consolidate(v)
-
-m<-concatPackFunc2(x_examples$funmat,v)
-m2<-rearrangeM(m,v2)
-m3<-removeZeroRowsCols(m2)
-
-f<-sprintf("\%s/r2html",tempdir())
-R2HTML::HTML(m3,file=f,append=FALSE)
-x<-readLines(f)
-
-colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-
-l<-spanTag(m[1,c(-1,-2)],"COLSPAN",colorMap)
-
-x<-replaceRotTag(x,l,dim(m3))
+if(interactive()){
+load("data/x_x.RData")
+load("data/x_l.RData")
+load("data/x_m3.RData")
+x<-replaceRotTag(x_x,x_l,dim(x_m3))
 }
 
 }

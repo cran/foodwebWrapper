@@ -13,6 +13,8 @@ returns a character vector of selected packages
 print a list of attached packages for the user to select from
 }
 \examples{
-if(interactive()){attachedPackages()}
+if(interactive()){
+attachedPackages()
+}
 
 }

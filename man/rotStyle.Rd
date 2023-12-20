@@ -13,7 +13,6 @@ returns character string containing html style definition for rotation
 add html style definition for rotation
 }
 \examples{
-
 r<-rotStyle()
 
 }

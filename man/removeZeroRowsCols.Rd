@@ -16,15 +16,9 @@ returns an altered version of character matrix m with removed rows and columns
 delete rows and cols of matrix m that contain all "0"s
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-m<-concatPackFunc2(x_examples$funmat,v)
-v2<-consolidate(v)
-
-m2<-rearrangeM(m,v2)
-
-m3<-removeZeroRowsCols(m2)
+if(interactive()){
+load("data/x_m2.RData")
+m3<-removeZeroRowsCols(x_m2)
+}
 
 }

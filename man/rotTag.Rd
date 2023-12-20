@@ -25,16 +25,10 @@ also need to increase height of row to accommodate rotated text
 see https://resultuniversity.com/html/html-table-width-height#:~:text=To\%20set\%20the\%20height\%20of\%20a\%20specific\%20row\%20in\%20an,property\%20in\%20pixels\%20or\%20percentages.
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-m<-concatPackFunc2(x_examples$funmat,v)
-v2<-consolidate(v)
-m2<-rearrangeM(m,v2)
-m3<-removeZeroRowsCols(m2)
-colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-rt<-rotTag(m[1,c(-1,-2)],m[2,c(-1,-2)],colorMap)
+if(interactive()){
+load("data/x_m5.RData")
+load("data/x_colorMap.RData")
+rt<-rotTag(x_m5[1,c(-1,-2)],x_m5[2,c(-1,-2)],x_colorMap)
+}
 
 }

@@ -7,7 +7,7 @@
 consolidate(v)
 }
 \arguments{
-\item{v}{character vector of package names component of return value of find_funs()}
+\item{v}{character vector of package names component of return value of find_funz()}
 }
 \value{
 returns a list whose components are character vector for permuting order of m
@@ -17,10 +17,9 @@ create a permutation list of package names for re-ordering
 rows and columns of matrix m, in decreasing order of function counts per package
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-l<-consolidate(v)
+if(interactive()){
+load("data/x_v.RData")
+l<-consolidate(x_v)
+}
 
 }

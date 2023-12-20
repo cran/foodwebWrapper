@@ -8,32 +8,27 @@
 #' @import textshaping
 #' @import magrittr
 #' @import tidyverse
+#' @import stringr
 #'
 #' @description wrapper for the function foodweb()
 #' concatenate the R package name for each retrieved R function
 #'
-#' @param funs character vector OR (in foodweb only) the result of a previous foodweb call
 #' @param where position(s) on search path, or an environment, or a list of environments
-#' @param prune character vector. If omitted, all funs will be shown; otherwise, only ancestors and descendants of functions in prune will be shown. Augments funs if required.
-#' @param rprune regexpr version of prune; prune <- funs %matching% rprune. Does NOT augment funs. Overrides prune if set.
-#' @param ancestors show ancestors of prune functions?
-#' @param descendents show descendents of prune functions?
 #' @param ofile character string containing path name for output file
 #' @param zeros Boolean if TRUE delete rows and cols that contain all 0's
 #' @param pawn Boolean if TRUE use chess symbols rather than rectangles in html table
 #' @param verbose Boolean if TRUE output several user messages
 #'
-#' @details If where=0, then the user is presented with the option
+#' @details if where is missing, then the user is presented with the option
 #'  of choosing from a list of attached packages
 #'
-#'  Many examples are given in the documentation for foodweb()
-#'
 #' @examples
-#'
 #' if(interactive()){
-#'   foodwebWrapper(where=0,prune="cbind",
-#'   ofile=sprintf("%s/foodwebWrapper.html",tempdir()))
-#'   }
+#' load("data/x_packages.RData")
+#' ofile<-sprintf("%s/foodwebWrapper.html",tempdir())
+#' foodwebWrapper(ofile=ofile)
+#' foodwebWrapper(where=x_packages,ofile=ofile)
+#' }
 #'
 #' @return foodweb returns an object of (S3) class foodweb. This has three components:
 #' \itemize{
@@ -44,67 +39,109 @@
 #'
 #' @export
 foodwebWrapper<-
-  function(funs,where=character(0),prune=character(0),rprune,ancestors=TRUE,descendents=TRUE,ofile="~/foodwebWrapper.html",zeros=TRUE,pawn=FALSE,verbose=TRUE) {
+  function(where=character(0),ofile="~/foodwebWrapper.html",zeros=TRUE,pawn=FALSE,verbose=TRUE) {
 
     if(verbose)
       message(sprintf("foodwebWrapper(): ofile is %s",ofile))
 
-    l<-attachedFunctions(verbose=verbose)
+    if(length(where)>0)
+    	l<-attachedFunctionsBatch(where)
+    else
+    	l<-attachedFunctions(verbose=verbose)
 
-    where<-unique(c(where,l$where))
-    prune<-unique(c(prune,l$prune))
+    where<-l$where
+    x_where<-where
+    #save(x_where,file="x_where.RData")
+    packages<-setdiff(unique(unlist(strsplit(where,"package:",TRUE))),"")
+    x_packages<-packages
+    #save(x_packages,file="x_packages.RData")
 
-    writeLines(c(where,prune),sprintf("%s.txt",ofile))
+	# packages is like
+	# [1] "relaxDriver"                   "playWholeHandDriverPassParams" "heartsCIM"
 
-    colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue","black","magenta","chocolate4")
+    # next list is the original list that I used until around December 8, 2023
+    #colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue","black","magenta","chocolate4")
+	# next list comes from https://sashamaps.net/docs/resources/20-colors/
+	# I omit white from the original list
+	colors<-c("red","green","blue","orange","purple","magenta","lime","pink","teal",
+		"brown","beige","maroon","mint","olive","apricot","navy","grey","black","lavender","yellow","cyan")
 
-    sink(sprintf("%s/fwjunk.txt",dirname(ofile)),type="output")
-    #sink("~/fwjunk",type="output")
-    on.exit(sink())
-    x<-mvbutils::foodweb(funs=funs,where=where,prune=prune,rprune=rprune,ancestors=ancestors,descendents=descendents)
-    #x_examples<-x
-    #save(x_examples,file="~/x_examples.RData")
+	# value of where should be like where="package:logos" NOT like where="logos"
+    x<-mvbutils::foodweb(where=where,plotting=FALSE)
+    x_x<-x
+    #save(x_x,file="x_x.RData")
+
     funs<-colnames(x$funmat)
-    #funs_examples<-funs
-    #save(funs_examples,file="~/funs_examples.RData")
+    x_funs<-funs
+    #save(x_funs,file="x_funs.RData")
 
     if(length(funs)<2)
-      stop("Not able to complete the wrapper portion:\nThe number of functions found by find_funs() was too low!")
+      stop("Not able to complete the wrapper portion:\nThe number of functions found by foodweb() was too low!")
 
-    v<-vector("character")
-    for(fun in funs)
-      v[fun]<-find_funs(fun)$package_name[1]
+    v<-find_funz(packages,funs)
+    x_v<-v
+    #save(x_v,file="x_v.RData")
+
+	# v is like
+    #                           augmentedProbs                            checkConverge
+    #                      "relaxDriver"                            "relaxDriver"
 
     m<-concatPackFunc2(x$funmat,v)
+    x_m<-m
+    #save(x_m,file="x_m.RData")
 
     v2<-consolidate(v)
+    x_v2<-v2
+    #save(x_v2,file="x_v2.RData")
 
     m<-rearrangeM(m,v2)
+    x_m2<-m
+    #save(x_m2,file="x_m2.RData")
     m<-t(rearrangeM(t(m),v2))
+    x_m3<-m
+    #save(x_m3,file="x_m3.RData")
 
     f<-sprintf("%s/r2html",dirname(ofile))
-    #f<-"~/r2html.txt"
+    x_f<-f
+    #save(x_f,file="x_f.RData")
     rownames(m)<-NULL
     colnames(m)<-NULL
+    x_m4<-m
+    #save(x_m4,file="x_m4.RData")
 
-    if(zeros)
+    if(zeros) {
       m<-removeZeroRowsCols(m)
+      x_m5<-m
+      #save(x_m5,file="x_m5.RData")
+    }
 
     colorMap<-mapFunctionsColors(m[1,c(-1,-2)],m[c(-1,-2),1],colors)
+    x_colorMap<-colorMap
+    #save(x_colorMap,file="x_colorMap.RData")
 
     R2HTML::HTML(m,file=f,append=FALSE)
     x<-readLines(f)
+    x_x2<-x
+    #save(x_x2,file="x_x2.RData")
 
     y<-addStyle(x,m,colorMap,pawn)
+    x_y<-y
+    #save(x_y,file="x_y.RData")
 
     writeLines(y,ofile)
+
+    sys<-sprintf("open %s",ofile)
+    system(sys)
   }
 
 #' attachedPackages
 #'
 #' @description print a list of attached packages for the user to select from
 #'
-#' @examples if(interactive()){attachedPackages()}
+#' @examples
+#' if(interactive()){
+#' attachedPackages()
+#' }
 #'
 #' @return returns a character vector of selected packages
 #'
@@ -133,13 +170,15 @@ attachedPackages<-
 #'
 #' @param verbose Boolean if TRUE output several user messages
 #'
-#' @examples if(interactive()){attachedFunctions(verbose=TRUE)}
+#' @examples
+#' if(interactive()){
+#' attachedFunctions(verbose=TRUE)
+#' }
 #'
 #' @return returns a list whose components are
 #' \itemize{
 #'    \item l list of user-selected packages and corresponding functions
 #'    \item where character vector of selected packages
-#'    \item prune character vector of selected functions
 #'  }
 #' @export
 attachedFunctions<-
@@ -149,7 +188,6 @@ attachedFunctions<-
     s<-search() # retrieve attached packages
     if(verbose) {
       message("\nPackages and environments to be included in the search\n")
-      message("Only ancestors and descendants of functions in prune will be shown\n")
       message("If a package that you want to include is missing,\nthen run install.packages() and/or library()\n")
     }
     print(s)
@@ -175,75 +213,84 @@ attachedFunctions<-
     }
     l2$l<-l
     l2$where<-names(l)
-    l2$prune<-unlist(l)
 
     return(l2)
   }
 
-#' find_funs
+#' attachedFunctionsBatch
+#'
+#' @description same as attachedFunctions() but no user interaction needed
+#'
+#' @param packs list of character strings containing the names of packages
+#'	package name is like "pack", not like "package:pack"
+#'
+#' @examples
+#' if(interactive()){
+#' attachedFunctionsBatch(c("SherlockHolmes","textBoxPlacement"))
+#' }
+#'
+#' @return returns a list whose components are
+#' \itemize{
+#'    \item l list of user-selected packages and corresponding functions
+#'    \item where character vector of selected packages
+#'  }
+#' @export
+attachedFunctionsBatch<-
+  function(packs) {
+  	l<-list()
+  	l2<-list()
+    for(pack in packs)
+        l[[sprintf("package:%s",pack)]]<-list()
+
+    l2$l<-l
+    l2$where<-names(l)
+
+    return(l2)
+  }
+
+#' find_funz
 #'
 #' @description determine in which R package a function ‘resides’
-#' copied and pasted from https://sebastiansauer.github.io/finds_funs/
 #'
-#' @param f name of function for which the package(s) are to be identified.
+#' @param packs list of character strings containing the names of the packages
+#' @param rfuns list of character strings containing the names of functions in
+#'  packs to which the result is to be restricted
 #'
-#' @examples find_funs("cbind")
+#' @examples
+#' if(interactive()){
+#' load("data/x_packages.RData")
+#' load("data/x_funs.RData")
+#' find_funz(packs=x_packages,rfuns=x_funs)
+#' }
 #'
-#' @details copied and pasted from https://sebastiansauer.github.io/finds_funs/
-#'
-#' @return returns dataframe with two columns:
-#'  package_name packages(s) which the function is part of (chr)
-#'  builtin_package  whether the package comes with standard R (a 'builtin'  package)
+#' @return returns vector of character strings, names are functions and values are packages
 #'
 #' @export
-find_funs <- function(f) {
-  if ("tidyverse" %in% rownames(installed.packages()) == FALSE) {
-    stop("tidyverse is needed for this function. Please install. Stopping")
+find_funz<-
+  function(packs,rfuns) {
+    v<-vector("character")
+    for(pack in packs) {
+      funs<-getNamespaceExports(pack)
+      for(f in funs)
+        if(f %in% rfuns)
+          v[f]<-pack
     }
-
-  ###suppressMessages(library(tidyverse))
-
-
-  # search for help in list of installed packages
-  help_installed <- help.search(paste0("^",f,"$"), agrep = FALSE)
-
-  # extract package name from help file
-  pckg_hits <- help_installed$matches[,"Package"]
-
-  if (length(pckg_hits) == 0) pckg_hits <- "No_results_found"
-
-  # get list of built-in packages
-
-  pckgs <- installed.packages()  %>% as_tibble
-  pckgs %>%
-    dplyr::filter("Priority" %in% c("base","recommended")) %>%
-    dplyr::select("Package") %>%
-    distinct -> builtin_pckgs_df
-
-  # check for each element of 'pckg hit' whether its built-in and loaded (via match). Then print results.
-
-  results <- data_frame(
-    package_name = pckg_hits,
-    builtin_pckage = match(pckg_hits, builtin_pckgs_df$Package, nomatch = 0) > 0,
-    loaded = match(paste("package:",pckg_hits, sep = ""), search(), nomatch = 0) > 0
-  )
-
-  return(results)
-}
+    return(v)
+  }
 
 #' concatPackFunc2
 #'
 #' @description match the package names with the function names
 #'
 #' @param m character matrix return value component $funmat of foodweb()
-#' @param v character vector of package names returned by find_funs()
+#' @param v character vector of package names returned by find_funz()
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
+#' if(interactive()){
+#' load("data/x_x.RData")
+#' load("data/x_v.RData")
+#' m<-concatPackFunc2(x_x$funmat,x_v)
+#' }
 #'
 #' @return returns augmented character matrix m
 #'
@@ -263,14 +310,13 @@ concatPackFunc2<-
 #' @description create a permutation list of package names for re-ordering
 #'  rows and columns of matrix m, in decreasing order of function counts per package
 #'
-#' @param v character vector of package names component of return value of find_funs()
+#' @param v character vector of package names component of return value of find_funz()
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' l<-consolidate(v)
+#' if(interactive()){
+#' load("data/x_v.RData")
+#' l<-consolidate(x_v)
+#' }
 #'
 #' @return returns a list whose components are character vector for permuting order of m
 #'
@@ -296,14 +342,11 @@ consolidate<-
 #'  return value of consolidate()
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#'
-#' m2<-rearrangeM(m,v2)
+#' if(interactive()){
+#' load("data/x_m.RData")
+#' load("data/x_v2.RData")
+#' m2<-rearrangeM(x_m,x_v2)
+#' }
 #'
 #' @return returns rearranged version of m
 #'
@@ -327,16 +370,10 @@ rearrangeM<-
 #' @param m character matrix whose entries are either "0" or "1"
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#'
-#' m2<-rearrangeM(m,v2)
-#'
-#' m3<-removeZeroRowsCols(m2)
+#' if(interactive()){
+#' load("data/x_m2.RData")
+#' m3<-removeZeroRowsCols(x_m2)
+#' }
 #'
 #' @return returns an altered version of character matrix m with removed rows and columns
 #'
@@ -361,20 +398,11 @@ removeZeroRowsCols<-
 #' @param colors character vector containing names of colors
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#'
-#' m2<-rearrangeM(m,v2)
-#'
-#' m3<-removeZeroRowsCols(m2)
-#'
+#' if(interactive()){
 #' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#'
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
+#' load("data/x_m3.RData")
+#' colorMap<-mapFunctionsColors(x_m3[1,c(-1,-2)],x_m3[c(-1,-2),1],colors)
+#' }
 #'
 #' @return returns a character vector mapping colors to package names
 #'
@@ -384,7 +412,7 @@ mapFunctionsColors<-
     u<-unique(c(row1,col1))
     n<-length(u)
     if(n>length(colors))
-      stop(sprintf("Not enough different colors %d %d. Try again with more stringent value for 'prune'",n,length(colors)))
+      stop(sprintf("Not enough different colors %d %d. Try again with fewer packages",n,length(colors)))
 
     v<-colors[1:n]
     names(v)<-u
@@ -402,24 +430,12 @@ mapFunctionsColors<-
 #' @param pawn Boolean if TRUE use chess symbols rather than rectangles in html table
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#' m2<-rearrangeM(m,v2)
-#'
-#' m3<-removeZeroRowsCols(m2)
-#'
-#' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-#'
-#' f<-sprintf("%s/r2html",tempdir())
-#' R2HTML::HTML(m3,file=f,append=FALSE)
-#' x<-readLines(f)
-
-#' y<-addStyle(x,m3,colorMap,pawn=TRUE)
+#' if(interactive()){
+#' load("data/x_x2.RData")
+#' load("data/x_m5.RData")
+#' load("data/x_colorMap.RData")
+#' y<-addStyle(x_x2,x_m5,x_colorMap,pawn=TRUE)
+#' }
 #'
 #' @return returns modified HTML code
 #'
@@ -436,6 +452,8 @@ addStyle<-
     l<-spanTag(m[c(-1,-2),1],"ROWSPAN",colorMap) # package names col 1
     if(length(l$tab)>1)
       x<-replaceRotTag(x,l,dim(m)) # package names col 1
+    x_x3<-x
+    #save(x_x3,file="x_x3.RData")
 
     x<-colorTag(m[c(-1,-2),1],m[c(-1,-2),2],ncol(m),x,colorMap,pawn)
 
@@ -455,7 +473,6 @@ addStyle<-
 #' @description add html style definition for rotation
 #'
 #' @examples
-#'
 #' r<-rotStyle()
 #'
 #' @return returns character string containing html style definition for rotation
@@ -480,21 +497,11 @@ rotStyle<-
 #' @param colorMap character array of colors
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#' m2<-rearrangeM(m,v2)
-#'
-#' m3<-removeZeroRowsCols(m2)
-#'
-#' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-#'
-#' l<-spanTag(m3[1,c(-1,-2)],"COLSPAN",colorMap)
-#'
+#' if(interactive()){
+#' load("data/x_m5.RData")
+#' load("data/x_colorMap.RData")
+#' l<-spanTag(x_m5[1,c(-1,-2)],"COLSPAN",x_colorMap)
+#' }
 #'
 #' @details see https://www.pierobon.org/html/span.htm#:~:text=Cells%20within%20HTML%20tables%20can,span%20more%20than%20one%20column.
 #'
@@ -551,20 +558,11 @@ spanTag<-
 #' @param colorMap character array of colors
 #'
 #' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#' m2<-rearrangeM(m,v2)
-
-#' m3<-removeZeroRowsCols(m2)
-
-#' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-
-#' rt<-rotTag(m[1,c(-1,-2)],m[2,c(-1,-2)],colorMap)
+#' if(interactive()){
+#' load("data/x_m5.RData")
+#' load("data/x_colorMap.RData")
+#' rt<-rotTag(x_m5[1,c(-1,-2)],x_m5[2,c(-1,-2)],x_colorMap)
+#' }
 #'
 #' @details see https://stackoverflow.com/questions/47261100/how-to-rotate-text-90-degrees-inline
 #'  also need to increase height of row to accommodate rotated text
@@ -588,7 +586,9 @@ rotTag<-
     v3<-vector("character",n)
     for(i in 1:n) { # rotated function names in row 2
       color<-colorMap[v1[i]]
-      v3[i]<-sprintf("<td class=cellinside><div id='rotate-text'><font color='%s'>%s</font></div></td>",color,v2[i])
+      # December 9 2023 try truncating long function names
+      #v3[i]<-sprintf("<td class=cellinside><div id='rotate-text'><font color='%s'>%s</font></div></td>",color,v2[i])
+      v3[i]<-sprintf("<td class=cellinside><div id='rotate-text'><font color='%s'>%s</font></div></td>",color,str_trunc(v2[i],30))
     }
 
     # alignment of rotated function names in row 2
@@ -616,26 +616,11 @@ rotTag<-
 #' @param dims return value of dim()
 #'
 #' @examples
-#' if(interactive()) {
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#' v2<-consolidate(v)
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' m2<-rearrangeM(m,v2)
-#' m3<-removeZeroRowsCols(m2)
-#'
-#' f<-sprintf("%s/r2html",tempdir())
-#' R2HTML::HTML(m3,file=f,append=FALSE)
-#' x<-readLines(f)
-#'
-#' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-#'
-#' l<-spanTag(m[1,c(-1,-2)],"COLSPAN",colorMap)
-#'
-#' x<-replaceRotTag(x,l,dim(m3))
+#' if(interactive()){
+#' load("data/x_x.RData")
+#' load("data/x_l.RData")
+#' load("data/x_m3.RData")
+#' x<-replaceRotTag(x_x,x_l,dim(x_m3))
 #' }
 #'
 #' @return returns modified version of HTML code containing data table
@@ -685,41 +670,10 @@ replaceRotTag<-
 #' @param pawn Boolean if TRUE use chess symbols rather than rectangles in html table
 #'
 #' @examples
-#' if(interactive()){
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#' m2<-rearrangeM(m,v2)
-#'
-#' m3<-removeZeroRowsCols(m2)
-#' f<-sprintf("%s/r2html",tempdir())
-#' R2HTML::HTML(m3,file=f,append=FALSE)
-#' x<-readLines(f)
-#'
-#' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-#'
-#' l<-spanTag(m[1,c(-1,-2)],"COLSPAN",colorMap)
-#'
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' m<-concatPackFunc2(x_examples$funmat,v)
-#' v2<-consolidate(v)
-#' m2<-rearrangeM(m,v2)
-#'
-#' m3<-removeZeroRowsCols(m2)
-#'
-#' x<-replaceRotTag(x,l,dim(m3))
-#'
-#' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
-#'
-#' x<-colorTag(m3[c(-1,-2),1],m3[c(-1,-2),2],ncol(m3),x,colorMap,pawn=TRUE)
+#' load("data/x_m5.RData")
+#' load("data/x_colorMap.RData")
+#' load("data/x_x3.RData")
+#' x<-colorTag(x_m5[c(-1,-2),1],x_m5[c(-1,-2),2],ncol(x_m5),x_x3,x_colorMap,pawn=TRUE)
 #' }
 #'
 #' @details
@@ -737,7 +691,6 @@ colorTag<-
 
     # https://www.toptal.com/designers/htmlarrows/symbols/
     chess<-c("&#9818;","&#9819;","&#9820;","&#9821;","&#9822;","&#9823;")
-
 
     n<-length(v2)
     nx<-length(x)
@@ -764,7 +717,8 @@ colorTag<-
         # annotate the function line in x
         v2Index<-v2Index+1
         line<-g[i]+(k-1)*nc+1
-        x[line]<-sprintf("<td class=cellinside><font color='%s'>%s</font></td>",colorMap[u[i]],v2[v2Index])
+        #x[line]<-sprintf("<td class=cellinside><font color='%s'>%s</font></td>",colorMap[u[i]],v2[v2Index])
+        x[line]<-sprintf("<td class=cellinside><font color='%s'>%s</font></td>",colorMap[u[i]],  str_trunc(v2[v2Index],25))
 
         # annotate the data lines for that function
         for(l in (line+1):(line+1+nc-3)) {
@@ -791,42 +745,3 @@ colorTag<-
 
     return(x)
   }
-
-
-#' leftJustifyHack
-#'
-#' @description insert &nbs escape sequences into text string to pad html table data cell
-#'
-#' @param v character vector
-#'
-#' @examples
-#' v<-vector("character")
-#' for(fun in funs_examples)
-#'   v[fun]<-find_funs(fun)$package_name[1]
-#'
-#' v2<-leftJustifyHack(v)
-#'
-#' @details we need to generate a set of character strings to insert into html table data cells.
-#'  we want the strings to be of equal length (matching the length of the longest string),
-#'  by left justifying the strings and padding them on the right with spaces.
-#'
-#' @return returns a character vector whose components are padded with &nbs escape sequences
-#'
-#' @export
-leftJustifyHack<-
-  function(v) {
-    n<-nchar(v)
-    m<-max(n)
-    del<-m-n
-
-    tmp<-sprintf("%-*.30s",m,v)
-    v<-gsub(" ","&nbs",tmp)
-
-    return(v)
-  }
-
-
-
-
-
-

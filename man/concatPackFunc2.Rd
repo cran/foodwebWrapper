@@ -9,7 +9,7 @@ concatPackFunc2(m, v)
 \arguments{
 \item{m}{character matrix return value component $funmat of foodweb()}
 
-\item{v}{character vector of package names returned by find_funs()}
+\item{v}{character vector of package names returned by find_funz()}
 }
 \value{
 returns augmented character matrix m
@@ -18,10 +18,10 @@ returns augmented character matrix m
 match the package names with the function names
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-m<-concatPackFunc2(x_examples$funmat,v)
+if(interactive()){
+load("data/x_x.RData")
+load("data/x_v.RData")
+m<-concatPackFunc2(x_x$funmat,x_v)
+}
 
 }

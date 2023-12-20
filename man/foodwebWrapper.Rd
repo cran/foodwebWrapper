@@ -5,12 +5,7 @@
 \title{foodwebWrapper}
 \usage{
 foodwebWrapper(
-  funs,
   where = character(0),
-  prune = character(0),
-  rprune,
-  ancestors = TRUE,
-  descendents = TRUE,
   ofile = "~/foodwebWrapper.html",
   zeros = TRUE,
   pawn = FALSE,
@@ -18,17 +13,7 @@ foodwebWrapper(
 )
 }
 \arguments{
-\item{funs}{character vector OR (in foodweb only) the result of a previous foodweb call}
-
 \item{where}{position(s) on search path, or an environment, or a list of environments}
-
-\item{prune}{character vector. If omitted, all funs will be shown; otherwise, only ancestors and descendants of functions in prune will be shown. Augments funs if required.}
-
-\item{rprune}{regexpr version of prune; prune <- funs \%matching\% rprune. Does NOT augment funs. Overrides prune if set.}
-
-\item{ancestors}{show ancestors of prune functions?}
-
-\item{descendents}{show descendents of prune functions?}
 
 \item{ofile}{character string containing path name for output file}
 
@@ -51,16 +36,15 @@ wrapper for the function foodweb()
 concatenate the R package name for each retrieved R function
 }
 \details{
-If where=0, then the user is presented with the option
+if where is missing, then the user is presented with the option
 of choosing from a list of attached packages
-
-Many examples are given in the documentation for foodweb()
 }
 \examples{
-
 if(interactive()){
-  foodwebWrapper(where=0,prune="cbind",
-  ofile=sprintf("\%s/foodwebWrapper.html",tempdir()))
-  }
+load("data/x_packages.RData")
+ofile<-sprintf("\%s/foodwebWrapper.html",tempdir())
+foodwebWrapper(ofile=ofile)
+foodwebWrapper(where=x_packages,ofile=ofile)
+}
 
 }

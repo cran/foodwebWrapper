@@ -20,19 +20,10 @@ returns a character vector mapping colors to package names
 map functions to color coding
 }
 \examples{
-v<-vector("character")
-for(fun in funs_examples)
-  v[fun]<-find_funs(fun)$package_name[1]
-
-m<-concatPackFunc2(x_examples$funmat,v)
-v2<-consolidate(v)
-
-m2<-rearrangeM(m,v2)
-
-m3<-removeZeroRowsCols(m2)
-
+if(interactive()){
 colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-
-colorMap<-mapFunctionsColors(m3[1,c(-1,-2)],m3[c(-1,-2),1],colors)
+load("data/x_m3.RData")
+colorMap<-mapFunctionsColors(x_m3[1,c(-1,-2)],x_m3[c(-1,-2),1],colors)
+}
 
 }

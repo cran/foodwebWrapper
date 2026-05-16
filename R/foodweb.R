@@ -1,6 +1,6 @@
 #' foodwebWrapper
 #'
-#' @importFrom mvbutils foodweb
+#' @import tools
 #' @import utils
 #' @import tibble
 #' @import dplyr
@@ -9,6 +9,8 @@
 #' @import magrittr
 #' @import tidyverse
 #' @import stringr
+#' @import grDevices
+#' @import graphics
 #'
 #' @description wrapper for the function foodweb()
 #' concatenate the R package name for each retrieved R function
@@ -24,7 +26,7 @@
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_packages.RData")
+#' #load("data/x_packages.RData")
 #' ofile<-sprintf("%s/foodwebWrapper.html",tempdir())
 #' foodwebWrapper(ofile=ofile)
 #' foodwebWrapper(where=x_packages,ofile=ofile)
@@ -67,7 +69,7 @@ foodwebWrapper<-
 		"brown","beige","maroon","mint","olive","apricot","navy","grey","black","lavender","yellow","cyan")
 
 	# value of where should be like where="package:logos" NOT like where="logos"
-    x<-mvbutils::foodweb(where=where,plotting=FALSE)
+    x<-foodweb(where=where,plotting=FALSE)
     x_x<-x
     #save(x_x,file="x_x.RData")
 
@@ -258,8 +260,8 @@ attachedFunctionsBatch<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_packages.RData")
-#' load("data/x_funs.RData")
+#' #load("data/x_packages.RData")
+#' #load("data/x_funs.RData")
 #' find_funz(packs=x_packages,rfuns=x_funs)
 #' }
 #'
@@ -287,8 +289,8 @@ find_funz<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_x.RData")
-#' load("data/x_v.RData")
+#' #load("data/x_x.RData")
+#' #load("data/x_v.RData")
 #' m<-concatPackFunc2(x_x$funmat,x_v)
 #' }
 #'
@@ -314,7 +316,7 @@ concatPackFunc2<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_v.RData")
+#' #load("data/x_v.RData")
 #' l<-consolidate(x_v)
 #' }
 #'
@@ -343,8 +345,8 @@ consolidate<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_m.RData")
-#' load("data/x_v2.RData")
+#' #load("data/x_m.RData")
+#' #load("data/x_v2.RData")
 #' m2<-rearrangeM(x_m,x_v2)
 #' }
 #'
@@ -371,7 +373,7 @@ rearrangeM<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_m2.RData")
+#' #load("data/x_m2.RData")
 #' m3<-removeZeroRowsCols(x_m2)
 #' }
 #'
@@ -400,7 +402,7 @@ removeZeroRowsCols<-
 #' @examples
 #' if(interactive()){
 #' colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-#' load("data/x_m3.RData")
+#' #load("data/x_m3.RData")
 #' colorMap<-mapFunctionsColors(x_m3[1,c(-1,-2)],x_m3[c(-1,-2),1],colors)
 #' }
 #'
@@ -431,9 +433,9 @@ mapFunctionsColors<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_x2.RData")
-#' load("data/x_m5.RData")
-#' load("data/x_colorMap.RData")
+#' #load("data/x_x2.RData")
+#' #load("data/x_m5.RData")
+#' #load("data/x_colorMap.RData")
 #' y<-addStyle(x_x2,x_m5,x_colorMap,pawn=TRUE)
 #' }
 #'
@@ -498,8 +500,8 @@ rotStyle<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_m5.RData")
-#' load("data/x_colorMap.RData")
+#' #load("data/x_m5.RData")
+#' #load("data/x_colorMap.RData")
 #' l<-spanTag(x_m5[1,c(-1,-2)],"COLSPAN",x_colorMap)
 #' }
 #'
@@ -559,8 +561,8 @@ spanTag<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_m5.RData")
-#' load("data/x_colorMap.RData")
+#' #load("data/x_m5.RData")
+#' #load("data/x_colorMap.RData")
 #' rt<-rotTag(x_m5[1,c(-1,-2)],x_m5[2,c(-1,-2)],x_colorMap)
 #' }
 #'
@@ -617,9 +619,9 @@ rotTag<-
 #'
 #' @examples
 #' if(interactive()){
-#' load("data/x_x.RData")
-#' load("data/x_l.RData")
-#' load("data/x_m3.RData")
+#' #load("data/x_x.RData")
+#' #load("data/x_l.RData")
+#' #load("data/x_m3.RData")
 #' x<-replaceRotTag(x_x,x_l,dim(x_m3))
 #' }
 #'
@@ -670,11 +672,10 @@ replaceRotTag<-
 #' @param pawn Boolean if TRUE use chess symbols rather than rectangles in html table
 #'
 #' @examples
-#' load("data/x_m5.RData")
-#' load("data/x_colorMap.RData")
-#' load("data/x_x3.RData")
+#' #load("data/x_m5.RData")
+#' #load("data/x_colorMap.RData")
+#' #load("data/x_x3.RData")
 #' x<-colorTag(x_m5[c(-1,-2),1],x_m5[c(-1,-2),2],ncol(x_m5),x_x3,x_colorMap,pawn=TRUE)
-#' }
 #'
 #' @details
 #' v1 is first column of m (excluding first 2 entries of m)
@@ -745,3 +746,526 @@ colorTag<-
 
     return(x)
   }
+
+# all of the functions below here were copied and pasted from the CRAN package
+# mvbutils. When necessary, I performed some manual tweaking, in particular
+# (1) I shortened the original version of globalVariables() to include those
+# small number of entries that are required here
+# (2) I commented out several lines that referred to "as.env".
+# A more up to date version of mvbutils is maintained at
+# markbravington.r-universe.dev by Mark Bravington
+
+"foodweb" <- function(funs, where = 1, charlim = 80, prune = character(0),
+    rprune, ancestors = TRUE, descendents = TRUE, plotting = TRUE,
+    plotmath = FALSE, generics = c("c", "print", "plot", "["),
+    lwd = 0.5, xblank = 0.18, border = "transparent", boxcolor = "white",
+    textcolor = "black", color.lines = TRUE, highlight = "red",
+    ...) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    oldpar <- par(..., no.readonly = TRUE)
+    #####on.exit(par(oldpar))
+    charlim <- charlim/par("cex")
+    par(lwd = lwd)
+    skip.computations <- FALSE
+    if (missing(funs)) {
+        if (is.environment(where))
+            where <- list(where)
+        funs <- unique(unlist(lapply(where, find.funs)))
+    }
+    else if (funs %is.a% "foodweb") {
+        skip.computations <- TRUE
+        extract.named(funs)
+        funs <- names(level)
+        n <- length(level)
+    }
+    if (!skip.computations) {
+        if (!missing(rprune))
+            prune <- funs %matching% rprune
+        funs <- unique(c(funs, prune))
+        if (!length(funs))
+            return(structure(list(funmat = matrix(0, 0, 0), x = numeric(0),
+                level = numeric(0)), class = "foodweb"))
+        find.web()
+        organize.web.display(plotmath = plotmath)
+    }
+    answer <- list(funmat = funmat, x = x, level = level)
+    class(answer) <- "foodweb"
+    if (plotting) {
+        opar <- par("ps")
+        if (names(dev.cur()) == "windows") {
+            on.exit(par(ps = opar + 1L))
+        }
+        plot(answer, border = border, boxcolor = boxcolor, xblank = xblank,
+            textcolor = textcolor, color.lines = color.lines,
+            plotmath = plotmath, ...)
+    }
+    invisible(answer)
+}
+"find.funs" <- function(pos = 1, ..., exclude.mcache = TRUE,
+    mode = "function") {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    findo <- function(pos2) {
+        o <- named(lsall(pos = pos2, ...))
+        if (exclude.mcache)
+            o <- o %except% mcachees(pos2)
+        if (!length(o))
+            return(character(0))
+        old.warn <- options(warn = -1)$warn
+        on.exit(options(warn = old.warn))
+        keep <- sapply(o, exists, where = pos2, mode = mode,
+            inherits = FALSE)
+        if (!any(keep))
+            return(character(0))
+        names(o) <- NULL
+        o[keep]
+    }
+    if (is.environment(pos))
+        pos <- list(pos)
+    ###else pos <- lapply(pos, as.env)
+    unlist(lapply(pos, findo), use.names = FALSE)
+}
+"%is.a%" <- function(x, what) inherits(x, what, FALSE)
+"extract.named" <- function(l, to = parent.frame()) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    n <- names(l)
+    for (i in n[nchar(n) > 0]) assign(i, l[[i]], envir = to)
+}
+"%matching%" <- function(x, patt) unique(unlist(lapply(patt,
+    grep, x = as.character(x), value = TRUE)))
+"find.web" <- function(nlocal = sys.parent()) mlocal({
+
+  # copied and pasted from the CRAN package mvbutils
+
+    funs <- unique(c(funs, generics))
+    n <- length(funs)
+    if (!n)
+        stop("Nothing there!")
+    funmat <- matrix(0, n, n, dimnames = list(MASTER = funs,
+        SLAVE = funs))
+    master.of <- lapply(funs, called.by, can.match = funs, where = where)
+    n.master <- unlist(lapply(master.of, length))
+    if (!sum(n.master))
+        stop("Bo-RING! No food chain here!")
+    setup <- c(rep(1:length(funs), n.master), unlist(master.of))
+    dim(setup) <- c(sum(n.master), 2)
+    funmat[setup] <- 1
+    diag(funmat) <- 0
+    funmat[, generics] <- 0
+    drop.generics <- funmat[generics, ] %**% rep(1, n) == 0
+    if (any(drop.generics)) {
+        funs <- funs[-match(generics[drop.generics], funs)]
+        funmat <- funmat[funs, funs]
+        n <- n - sum(drop.generics)
+    }
+    color <- rep(textcolor, n)
+    if (length(prune)) {
+        prunio <- matrix(0, length(prune), n)
+        prunio <- sapply(to.regexpr(prune), regexpr, text = funs)
+        prunio <- as.logical((prunio != -1) %**% rep(1, length(prune)))
+        color[prunio] <- highlight
+        if (descendents) {
+            old.descendents <- rep(FALSE, n)
+            descendents <- prunio
+            while (sum(descendents) != sum(old.descendents)) {
+                old.descendents <- descendents
+                descendents <- descendents | (descendents %**%
+                  funmat > 0)
+            }
+        }
+        else descendents <- prunio
+        if (ancestors) {
+            old.ancestors <- rep(FALSE, n)
+            ancestors <- prunio
+            while (sum(ancestors) != sum(old.ancestors)) {
+                old.ancestors <- ancestors
+                ancestors <- ancestors | (funmat %**% ancestors >
+                  0)
+            }
+        }
+        else ancestors <- prunio
+        color <- color[ancestors | descendents]
+        funs <- funs[ancestors | descendents]
+        funmat <- funmat[funs, funs, drop = FALSE]
+        n <- length(funs)
+    }
+    if (!n)
+        stop("Nothing there!")
+    level <- rep(0, n)
+    names(level) <- funs
+    current.level <- 1
+    while (any(level == 0)) {
+        tops <- rep(1, sum(level == 0)) %**% funmat[level ==
+            0, level == 0] == 0
+        if (!any(tops))
+            tops <- least.mutual.dependency(funmat, funs, level)
+        level[dimnames(funmat)[[1]][level == 0][tops]] <- current.level
+        current.level <- current.level + 1
+    }
+})
+"organize.web.display" <- function(resequence = TRUE, merge01 = FALSE,
+    plotmath = FALSE, nlocal = sys.parent()) mlocal({
+
+      # copied and pasted from the CRAN package mvbutils
+
+    level <- rep(0, n)
+    names(level) <- funs
+    current.level <- 1
+    if (n > 1)
+        while (any(level == 0)) {
+            tops <- rep(1, sum(level == 0)) %**% funmat[level ==
+                0, level == 0] == 0
+            if (!any(tops))
+                tops <- least.mutual.dependency(funmat, funs,
+                  level)
+            level[(1:n)[level == 0][tops]] <- current.level
+            current.level <- current.level + 1
+        }
+    else level[] <- 1
+    x <- numeric(n)
+    n.masters <- sum(level == 1)
+    if (!merge01) {
+        level[level == 1 & ((funmat %*% rep(1, n)) == 0)] <- 0
+        if (!sum(level == 1))
+            level[level == 0] <- 1
+    }
+    for (current.level in min(level):max(level)) {
+        if (resequence) {
+            if (current.level > 1) {
+                slave.of <- funmat[funs[level < current.level],
+                  funs[level == current.level], drop = FALSE]
+                pos.order <- (x[level < current.level] %*% slave.of)/(rep(1,
+                  sum(level < current.level)) %*% slave.of)
+                pos.order <- jitter(c(0, 1, pos.order))[-(1:2)]
+            }
+            else if (current.level == 1) {
+                pos.order <- rank(jitter(c(-2, -1, funmat[level ==
+                  1, ] %*% rep(1, n)))[-(1:2)])
+                pos.order[pos.order%%2 == 0] <- 2 * length(pos.order) -
+                  pos.order[pos.order%%2 == 0]
+            }
+            else pos.order <- 1:sum(level == 0)
+            pos.order <- order(pos.order)
+        }
+        else pos.order <- 1:sum(level == current.level)
+        level.shift <- if (current.level %in% c(0, 1, max(level)))
+            0
+        else (current.level - 1)/(max(level) - 1) - 0.5
+        if (plotmath) {
+            fn <- lapply(funs[level == current.level], function(x) parse(text = x)[[1]])
+            nch <- sapply(fn, strwidth)
+            charlim <- strwidth(paste(rep("x", charlim), collapse = ""))
+        }
+        else nch <- nchar(funs[level == current.level])
+        if (exists("minstrl", frame = sys.nframe()))
+            nch <- pmax(nch, minstrl)
+        nch <- cumsum(nch[pos.order])
+        x[level == current.level][pos.order] <- (c(0, clip(nch)) +
+            nch + level.shift)/(2 * nch[length(nch)])
+        layers <- nch[length(nch)]%/%charlim
+        if (layers)
+            layers <- rep(0.1 * seq(from = -layers, to = layers,
+                by = 2), sum(level == current.level)/(1 + layers) +
+                1)[1:sum(level == current.level)]
+        level[level == current.level][pos.order] <- level[level ==
+            current.level][pos.order] + layers
+    }
+    level <- 1 + max(round(level)) - level
+})
+"named" <- function(x) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    if (!length(x))
+        return(x)
+    names(x) <- as.character(x)
+    x
+}
+"lsall" <- function(...) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    mc <- match.call(expand.dots = TRUE)
+    mc$all.names <- TRUE
+    mc[[1]] <- as.name("ls")
+    eval(mc, parent.frame())
+}
+"%except%" <- function(vector, condition) vector[match(vector,
+    condition, 0) == 0]
+"mcachees" <- function(envir = .GlobalEnv) if (is.null(mcache <- attr(as.environment(envir),
+    "mcache"))) character(0) else names(mcache)
+"pos" <- function(substrs, mainstrs, any.case = FALSE, names.for.output) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    ls <- length(substrs)
+    lm <- length(mainstrs)
+    .pos <- function(substr, mainstr) {
+        ns <- nchar(substr)
+        nm <- nchar(mainstr)
+        if (ns > nm)
+            return(0)
+        mainstr <- substring(mainstr, 1:(nm - ns + 1), ns:nm)
+        t <- (1:length(mainstr))[mainstr == substr]
+        if (length(t) == 0)
+            0
+        else t
+    }
+    if (any.case) {
+        substrs <- upper.case(substrs)
+        mainstrs <- upper.case(mainstrs)
+    }
+    if ((ls == 1) && (lm == 1))
+        return(matrix(.pos(substrs, mainstrs), 1))
+    if ((ls%%lm) * (lm%%ls))
+        warning("Length of longer not a multiple of length of shorter")
+    if (ls < lm) {
+        if (missing(names.for.output))
+            names.for.output <- names(mainstrs)
+        substrs <- rep(substrs, (lm%/%ls) + 1)
+    }
+    else if (ls > lm) {
+        if (missing(names.for.output))
+            names.for.output <- names(substrs)
+        mainstrs <- rep(mainstrs, (ls%/%lm) + 1)
+    }
+    else if (missing(names.for.output))
+        names.for.output <- names(mainstrs)
+    ls <- max(ls, lm)
+    j <- vector("list", ls)
+    for (i in (1:ls)) j[[i]] <- .pos(substrs[i], mainstrs[i])
+    max.n.pos <- max(sapply(j, length))
+    if (max.n.pos == 1)
+        jj <- matrix(unlist(j), 1)
+    else {
+        jj <- sapply(j, function(x, w) c(x, rep(0, w - length(x))),
+            w = max.n.pos)
+    }
+    dimnames(jj) <- list(character(0), names.for.output)
+    t(jj)
+}
+
+"upper.case" <- function(s) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    a <- attributes(s)
+    if (exists("casefold", mode = "function"))
+        s <- casefold(s, upper = TRUE)
+    else {
+        s <- strsplit(s, "")
+        lets <- LETTERS
+        names(lets) <- letters
+        transfer <- function(x) {
+            change <- x %in% letters
+            x[change] <- lets[x[change]]
+            paste(x, collapse = "")
+        }
+        s <- sapply(s, transfer)
+    }
+    do.call("structure", c(list(.Data = s), a))
+}
+"mlocal" <- function(expr) {
+    sp <- sys.parent()
+    sp.env <- sys.frame(sp)
+    nlocal <- get("nlocal", envir = sp.env)
+    nlocal.env <- if (is.numeric(nlocal))
+        sys.frame(nlocal)
+    else as.environment(nlocal)
+    on.exit({
+        remove(list = names(params) %that.are.in% (lsall(env = nlocal.env) %except%
+            names(savers)), envir = nlocal.env)
+        for (i in names(savers)) assign(i, savers[[i]], envir = nlocal.env)
+    })
+    eval(expression(on.exit())[[1]], envir = nlocal.env)
+    params <- formals(sys.function(sp))
+    params <- params[names(params) != "nlocal"]
+    savers <- names(params)
+    if (length(params)) {
+        names(savers) <- savers
+        savers <- sapply(savers, exists, envir = nlocal.env,
+            inherits = FALSE)
+        savers <- names(savers)[savers]
+        if (length(savers)) {
+            names(savers) <- savers
+            savers <- lapply(savers, function(x) mget(x, envir = nlocal.env)[[1]])
+        }
+        for (i in names(params)) {
+            if (eval(call("missing", i), envir = sp.env)) {
+                if (is.symbol(params[[i]]) && !nzchar(as.character(params[[i]])) &&
+                  exists(i, envir = nlocal.env, inherits = FALSE))
+                  remove(list = i, envir = nlocal.env)
+                else assign(i, params[[i]], envir = nlocal.env)
+            }
+            else assign(i, sp.env[[i]], envir = nlocal.env)
+        }
+    }
+    expr <- substitute(repeat {
+        assign("answer", expr, envir = env)
+        break
+    }, list(expr = substitute(expr), env = sys.frame(sys.nframe())))
+    on.exit.code <- quote(NULL)
+    eval(expr, envir = nlocal.env, enclos = sys.frame(sys.nframe()))
+    eval(on.exit.code, envir = nlocal.env, enclos = sys.frame(sys.nframe()))
+    if (exists("override.answer", envir = sys.frame(sys.nframe()),
+        inherits = FALSE))
+        answer <- override.answer
+    if (exists("answer", envir = sys.frame(sys.nframe()), inherits = FALSE))
+        answer
+}
+"called.by" <- function(fname, can.match, where) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    where <- if (is.environment(where))
+        list(where)
+    else as.list(where)
+    which <- unlist(lapply(where, exists, x = fname), use.names = FALSE)
+    if (!any(which)) {
+        f <- if (exists(fname))
+            get(fname)
+        else list()
+    }
+    else f <- get(fname, pos = where[[index(which)[1]]])
+    flist <- char.unlist(f)
+    if (!length(flist))
+        return(numeric(0))
+    everything <- flist
+    everything <- match(everything, can.match, nomatch = 0)
+    everything <- everything[everything > 0]
+    everything
+}
+"%**%" <- function(x, y) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    dimnames(x) <- NULL
+    dimnames(y) <- NULL
+    if (length(dim(x)) == 2 && length(dim(y)) == 2 && dim(x)[2] ==
+        1 && dim(y)[1] == 1)
+        return(c(x) %o% c(y))
+    if ((!is.null(dim(x)) && any(dim(x) == 1)))
+        dim(x) <- NULL
+    if ((!is.null(dim(y)) && any(dim(y) == 1)))
+        dim(y) <- NULL
+    if (is.null(dim(x)) && is.null(dim(y))) {
+        if (length(x) == length(y))
+            x <- x %*% y
+        else {
+            if ((length(x) != 1) && (length(y) != 1))
+                stop("lengths of x (" %&% length(x) %&% ") and y (" %&%
+                  length(y) %&% ") are incompatible")
+            else x <- x * y
+        }
+    }
+    else x <- x %*% y
+    if ((!is.null(dim(x)) && any(dim(x) == 1)))
+        dim(x) <- NULL
+    x
+}
+"to.regexpr" <- function(x) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    x <- strsplit(x, "")
+    repfun <- function(xx) {
+        m <- match(xx, c("&", ".", "%", "\\", "[", "]", "(",
+            ")", "^", "{", "}", "+", "|", "$", "?", "*"), 0)
+        xx[m > 0] <- "\\" %&% xx[m > 0]
+        paste(xx, collapse = "")
+    }
+    sapply(x, repfun)
+}
+"least.mutual.dependency" <- function(funmat, funs, level) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    group <- funmat[level == 0, level == 0, drop = FALSE]
+    mode(group) <- "logical"
+    old.group <- group & FALSE
+    while (any(group != old.group)) {
+        old.group <- group
+        for (i in funs[level == 0]) {
+            newbies <- group[, group[, i], drop = FALSE] %*%
+                rep(1, sum(group[, i]))
+            group[, i] <- group[, i] | (newbies > 0)
+        }
+    }
+    nn <- sum(level == 0)
+    keep <- c(TRUE, rep(FALSE, nn - 1))
+    for (i in 2:nn) {
+        old.group <- matrix(as.vector(group[, i]) == as.vector(group[,
+            keep]), nrow = nn)
+        keep[i] <- !any(rep(1, nn) %*% old.group == nn)
+    }
+    group <- group[, keep, drop = FALSE]
+    if (ncol(group) > 1) {
+        nn <- ncol(group)
+        old.group <- matrix(0, nn, nn)
+        for (i in 1:nn) for (j in (1:nn)[1:nn != i]) {
+            old.group[i, j] <- set.test(group[, i], group[, j])
+            old.group[j, i] <- -old.group[i, j]
+        }
+        old.group[old.group < 0] <- 0
+        not.keep <- old.group %*% rep(1, nn) > 0
+        group <- group[, !not.keep, drop = FALSE]
+    }
+    group <- dimnames(group)[[1]][apply(group, 1, any)]
+    match(group, funs[level == 0])
+}
+"%that.are.in%" <- function(a, b) a[a %in% b]
+"index" <- function(lvector) seq_along(lvector)[lvector]
+"char.unlist" <- function(x) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    if (!(listable <- is.list(x))) {
+        if (isS4(x) && (".Data" %in% names(getSlots(class(x)))))
+            x <- x@.Data
+        if (listable <- (!is.atomic(x) && !is.symbol(x))) {
+            xx <- try(as.list(x), silent = TRUE)
+            if (x %is.a% "try-error") {
+                listable <- FALSE
+            }
+            else {
+                x <- xx
+            }
+        }
+    }
+    if (listable)
+        unlist(lapply(x, char.unlist), use.names = FALSE)
+    else paste(deparse(x), collapse = "\n")
+}
+"%&%" <- function(a, b) paste(a, b, sep = "")
+"group" <- function(m, ...) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    l <- list(...)
+    if (length(l) == 1 && is.list(l))
+        l <- l[[1]]
+    rep(names(l), sapply(l, length))[match(m, unlist(l), NA)]
+}
+"set.test" <- function(a, b) {
+
+  # copied and pasted from the CRAN package mvbutils
+
+    r <- range(a - b)
+    if (all(r == c(-1, 0)))
+        -1
+    else if (all(r == c(0, 1)))
+        1
+    else 0
+}
+"clip" <- function(x, n = 1) x[1 %upto% (length(x) - n)]
+"%upto%" <- function(from, to) if (from <= to) from:to else numeric(0)
+
+globalVariables(package = "foodwebWrapper", names =
+c("funmat","generics","getSlots","highlight","level","minstrl","override.answer","prune","textcolor","x"))
+
+

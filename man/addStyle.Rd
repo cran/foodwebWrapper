@@ -23,9 +23,9 @@ insert tags into HTML code to implement rotating table text
 }
 \examples{
 if(interactive()){
-load("data/x_x2.RData")
-load("data/x_m5.RData")
-load("data/x_colorMap.RData")
+#load("data/x_x2.RData")
+#load("data/x_m5.RData")
+#load("data/x_colorMap.RData")
 y<-addStyle(x_x2,x_m5,x_colorMap,pawn=TRUE)
 }
 

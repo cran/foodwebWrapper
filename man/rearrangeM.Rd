@@ -20,8 +20,8 @@ rearrange the order of rows or columns of matrix based on entries in a vector
 }
 \examples{
 if(interactive()){
-load("data/x_m.RData")
-load("data/x_v2.RData")
+#load("data/x_m.RData")
+#load("data/x_v2.RData")
 m2<-rearrangeM(x_m,x_v2)
 }
 

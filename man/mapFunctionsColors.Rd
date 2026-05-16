@@ -22,7 +22,7 @@ map functions to color coding
 \examples{
 if(interactive()){
 colors<-c("darkmagenta","darkolivegreen","darkorange3","brown4","red","blue")
-load("data/x_m3.RData")
+#load("data/x_m3.RData")
 colorMap<-mapFunctionsColors(x_m3[1,c(-1,-2)],x_m3[c(-1,-2),1],colors)
 }
 

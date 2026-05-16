@@ -18,7 +18,7 @@ rows and columns of matrix m, in decreasing order of function counts per package
 }
 \examples{
 if(interactive()){
-load("data/x_v.RData")
+#load("data/x_v.RData")
 l<-consolidate(x_v)
 }
 

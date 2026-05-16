@@ -29,3 +29,10 @@ add tag to color function name in column 2, based on package in column 1
 v1 is first column of m (excluding first 2 entries of m)
 v2 is second column of m (excluding first 2 entries of m)
 }
+\examples{
+#load("data/x_m5.RData")
+#load("data/x_colorMap.RData")
+#load("data/x_x3.RData")
+x<-colorTag(x_m5[c(-1,-2),1],x_m5[c(-1,-2),2],ncol(x_m5),x_x3,x_colorMap,pawn=TRUE)
+
+}

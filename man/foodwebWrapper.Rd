@@ -41,7 +41,7 @@ of choosing from a list of attached packages
 }
 \examples{
 if(interactive()){
-load("data/x_packages.RData")
+#load("data/x_packages.RData")
 ofile<-sprintf("\%s/foodwebWrapper.html",tempdir())
 foodwebWrapper(ofile=ofile)
 foodwebWrapper(where=x_packages,ofile=ofile)

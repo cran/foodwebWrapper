@@ -26,8 +26,8 @@ see https://resultuniversity.com/html/html-table-width-height#:~:text=To\%20set\
 }
 \examples{
 if(interactive()){
-load("data/x_m5.RData")
-load("data/x_colorMap.RData")
+#load("data/x_m5.RData")
+#load("data/x_colorMap.RData")
 rt<-rotTag(x_m5[1,c(-1,-2)],x_m5[2,c(-1,-2)],x_colorMap)
 }
 

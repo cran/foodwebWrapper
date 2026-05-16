@@ -30,8 +30,8 @@ see https://www.pierobon.org/html/span.htm#:~:text=Cells\%20within\%20HTML\%20ta
 }
 \examples{
 if(interactive()){
-load("data/x_m5.RData")
-load("data/x_colorMap.RData")
+#load("data/x_m5.RData")
+#load("data/x_colorMap.RData")
 l<-spanTag(x_m5[1,c(-1,-2)],"COLSPAN",x_colorMap)
 }
 

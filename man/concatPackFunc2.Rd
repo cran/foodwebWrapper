@@ -19,8 +19,8 @@ match the package names with the function names
 }
 \examples{
 if(interactive()){
-load("data/x_x.RData")
-load("data/x_v.RData")
+#load("data/x_x.RData")
+#load("data/x_v.RData")
 m<-concatPackFunc2(x_x$funmat,x_v)
 }
 

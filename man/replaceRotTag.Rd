@@ -21,9 +21,9 @@ insert html tags for rotating text
 }
 \examples{
 if(interactive()){
-load("data/x_x.RData")
-load("data/x_l.RData")
-load("data/x_m3.RData")
+#load("data/x_x.RData")
+#load("data/x_l.RData")
+#load("data/x_m3.RData")
 x<-replaceRotTag(x_x,x_l,dim(x_m3))
 }
 

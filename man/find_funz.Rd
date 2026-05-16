@@ -20,8 +20,8 @@ determine in which R package a function ‘resides’
 }
 \examples{
 if(interactive()){
-load("data/x_packages.RData")
-load("data/x_funs.RData")
+#load("data/x_packages.RData")
+#load("data/x_funs.RData")
 find_funz(packs=x_packages,rfuns=x_funs)
 }
 

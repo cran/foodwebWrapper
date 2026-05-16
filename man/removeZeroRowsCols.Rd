@@ -17,7 +17,7 @@ delete rows and cols of matrix m that contain all "0"s
 }
 \examples{
 if(interactive()){
-load("data/x_m2.RData")
+#load("data/x_m2.RData")
 m3<-removeZeroRowsCols(x_m2)
 }
 

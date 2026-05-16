@@ -49,3 +49,10 @@ font-family:"Times New Roman",serif'>Figure 1 demonstrates using the interactive
 
 <p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
 font-family:"Times New Roman",serif'>Finally, as a diversion from the monotony of the little rectangles, we can specify random chess pieces by <i>pawns=TRUE</i></p><br>
+
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>Technical Note added May 16 2026<o:p></o:p></span></b></p>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>Instead of importing the CRAN package mvbutils, the required functions were copied and pasted from mvbutils. This was necessitated by CRAN planning to decommission mvbutils. I used my new package consolidatePacks to automate that process. A more up to date version of mvbutils is maintained at markbravington.r-universe.dev by Mark Bravington.</p><br>
